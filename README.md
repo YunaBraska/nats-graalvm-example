@@ -2,6 +2,8 @@
 
 Demonstrating the integration of NATS with GraalVM for creating efficient native executables, showcasing optimal
 configurations and techniques for leveraging NATS in high-performance, low-footprint applications.
+This example uses [jNats](https://github.com/nats-io/nats.java) client to connect to
+the [Nats Server](https://github.com/YunaBraska/nats-server) which is started within this project.
 
 ### Requirements
 
@@ -46,9 +48,3 @@ configurations and techniques for leveraging NATS in high-performance, low-footp
 | `-H:Name=native-executable`                                   | Sets the name of the generated executable file.                                                                                                                                                                                                                                                                                                                                                                                                 |
 | `-cp "<class-path>"`                                          | Specifies the classpath, which includes paths to all classes and libraries that your application depends on. Separate multiple paths with `:` on Unix-like systems or `;` on Windows.                                                                                                                                                                                                                                                           |
 | `<main-class>`                                                | The fully qualified name of your main class. This is the entry point of your application.                                                                                                                                                                                                                                                                                                                                                       |
-
-### Application description
-
-This example uses [jNats](https://github.com/nats-io/nats.java) client to connect to
-the [Nats Server](https://github.com/YunaBraska/nats-server) which is started within this project.
-
