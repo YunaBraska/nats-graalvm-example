@@ -62,7 +62,7 @@
                         <artifactId>native-image-maven-plugin</artifactId>
                         <version>${native-image-maven-plugin.version}</version>
                         <configuration>
-                            <imageName>ExampleApp</imageName>
+                            <imageName>native-executable</imageName>
                             <mainClass>berlin.yuna.nativeexample.Main</mainClass>
                             <buildArgs>
                                 <!-- Reduces the image size - Ensures the native image doesn't include the JVM as a fallback option -->
