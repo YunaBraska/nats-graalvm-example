@@ -1,0 +1,27 @@
+name: 🧪 CI · Main
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Ref.
+        required: false
+        default: ''
+        type: string
+
+permissions: {}
+
+concurrency:
+  group: build-main-${{ github.ref || github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    permissions:
+      contents: read
+    uses: YunaBraska/YunaBraska/.github/workflows/wc_java_build_common.yml@f6c362d9c539d7a028b816572d812e892072c50b
+    with:
+      ref: ${{ inputs.ref || github.sha }}
