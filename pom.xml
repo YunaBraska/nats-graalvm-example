@@ -9,11 +9,12 @@
     <version>1.0.0</version>
 
     <properties>
-        <!-- PROPERTIES -->
+        <!-- PROJECT -->
         <java-version>21</java-version>
         <project.encoding>UTF-8</project.encoding>
         <project.build.sourceEncoding>${project.encoding}</project.build.sourceEncoding>
         <project.reporting.outputEncoding>${project.encoding}</project.reporting.outputEncoding>
+        <project.build.outputTimestamp>1980-01-01T00:00:02Z</project.build.outputTimestamp>
 
         <!-- PRODUCTION -->
         <nats-server.version>2.10.9</nats-server.version>
@@ -21,7 +22,10 @@
 
         <!-- BUILD -->
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
-        <native-image-maven-plugin.version>21.2.0</native-image-maven-plugin.version>
+        <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
+        <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
+        <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
+        <native-maven-plugin.version>0.10.2</native-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -44,9 +48,47 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <source>${java-version}</source>
-                    <target>${java-version}</target>
+                    <release>${java-version}</release>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven-jar-plugin.version}</version>
+                <configuration>
+                    <outputTimestamp>${project.build.outputTimestamp}</outputTimestamp>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <release>${java-version}</release>
+                            <doclint>none</doclint>
+                            <quiet>true</quiet>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>${maven-source-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -58,20 +100,15 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.graalvm.nativeimage</groupId>
-                        <artifactId>native-image-maven-plugin</artifactId>
-                        <version>${native-image-maven-plugin.version}</version>
+                        <groupId>org.graalvm.buildtools</groupId>
+                        <artifactId>native-maven-plugin</artifactId>
+                        <version>${native-maven-plugin.version}</version>
                         <configuration>
-                            <imageName>native-executable</imageName>
+                            <imageName>${project.artifactId}.native</imageName>
                             <mainClass>berlin.yuna.nativeexample.Main</mainClass>
                             <buildArgs>
-                                <!-- Reduces the image size - Ensures the native image doesn't include the JVM as a fallback option -->
                                 <buildArg>--no-fallback</buildArg>
-                                <!-- Disables the use of the GraalVM compilation server -->
-                                <buildArg>--no-server</buildArg>
-                                <!-- Improve startup time - Initialize classes at build time rather than at runtime -->
                                 <buildArg>--initialize-at-build-time</buildArg>
-                                <!-- Nats Specific parameter -->
                                 <buildArg>--initialize-at-run-time=io.nats.client.support.RandomUtils</buildArg>
                                 <buildArg>--initialize-at-run-time=java.security.SecureRandom</buildArg>
                             </buildArgs>
@@ -79,7 +116,7 @@
                         <executions>
                             <execution>
                                 <goals>
-                                    <goal>native-image</goal>
+                                    <goal>compile-no-fork</goal>
                                 </goals>
                                 <phase>package</phase>
                             </execution>
