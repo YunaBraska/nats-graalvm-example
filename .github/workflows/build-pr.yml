@@ -26,6 +26,17 @@ jobs:
   build:
     permissions:
       contents: read
-    uses: YunaBraska/YunaBraska/.github/workflows/wc_java_build_common.yml@f6c362d9c539d7a028b816572d812e892072c50b
+      packages: read
+    uses: YunaBraska/YunaBraska/.github/workflows/wc_java_build_common.yml@93dcc244b1713aeb9594aff65df1a2901ded707f
     with:
       ref: ${{ inputs.ref || github.sha }}
+
+  native:
+    needs:
+      - build
+    permissions:
+      contents: read
+    uses: YunaBraska/YunaBraska/.github/workflows/wc_java_build_native.yml@93dcc244b1713aeb9594aff65df1a2901ded707f
+    with:
+      ref: ${{ needs.build.outputs.commit_sha }}
+      version: ${{ needs.build.outputs.version }}

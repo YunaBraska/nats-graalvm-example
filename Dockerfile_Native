@@ -1,0 +1,15 @@
+FROM ghcr.io/graalvm/native-image-community:25.0.2@sha256:0d936f32bb8acb5bc60c41b33e05f064d7a6aaf36b726538296c54949bd4a3c0 AS build
+
+WORKDIR /workspace
+
+RUN microdnf install -y curl && microdnf clean all
+
+COPY .mvn .mvn
+COPY mvnw pom.xml ./
+COPY src src
+
+RUN chmod +x mvnw && ./mvnw -B -Pnative -DskipTests package
+
+FROM scratch AS export
+
+COPY --from=build /workspace/target/*.native /app.native
