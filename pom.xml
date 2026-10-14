@@ -17,8 +17,8 @@
         <project.build.outputTimestamp>1980-01-01T00:00:02Z</project.build.outputTimestamp>
 
         <!-- PRODUCTION -->
-        <nats-server.version>2.15.0</nats-server.version>
-        <jnats.version>2.26.3</jnats.version>
+        <nats-server.version>2.15.1</nats-server.version>
+        <jnats.version>2.26.4</jnats.version>
 
         <!-- BUILD -->
         <maven-compiler-plugin.version>3.16.0</maven-compiler-plugin.version>
